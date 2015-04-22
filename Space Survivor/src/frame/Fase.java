@@ -29,14 +29,16 @@ public class Fase extends JPanel implements ActionListener{
 	private Nave nave;
 	private List<Meteoro> meteoros;
 	private Timer timer;
+	private List<Meteoro> explosao;
 	private boolean gameOver;
-	private int[][] coordenadas = { { 2380, 29 }, { 2600, 59 }, { 1380, 89 },
-		{ 780, 109 }, { 580, 139 }, { 880, 239 }, { 790, 259 },
-		{ 760, 50 }, { 790, 150 }, { 1980, 209 }, { 560, 45 }, { 510, 70 },
-		{ 930, 159 }, { 590, 80 }, { 530, 60 }, { 940, 59 }, { 990, 30 },
-		{ 920, 200 }, { 900, 259 }, { 660, 50 }, { 540, 90 }, { 810, 220 },
-		{ 860, 20 }, { 740, 180 }, { 820, 128 }, { 490, 170 }, { 700, 30 },
-		{ 920, 300 }, { 856, 328 }, { 456, 320 } };
+	private int[][] coordenadas = 
+		{ 	{360, 1200}, {360, -800}, {360, 1500}, {360, -2600}, {360, -2200}, {360, 3000}, {360, 3350},
+			{1350, 360}, {1900, 360}, {1700, 360}, {-2400, 360}, {-2800, 360}, {3200, 360}, {-3500, 360},
+			{2380, 1000}, {1279, 4353}, {1022, 3247}, {3648, 1332}, {1321, 3123}, {2131, 1324}, {1323, 1323},
+			{-2121, -3300}, {-2131, 3212}, {1002, -1292}, {1002, -2234}, {-1213, 2001}, {2001, -2001}
+//			{}, {}, {}, {}, {},
+//			{}, {}, {}, {}, {}
+		};
 
 	
 	
@@ -64,6 +66,7 @@ public class Fase extends JPanel implements ActionListener{
 	public void inicializaMeteoros(){
 		
 		meteoros = new ArrayList<Meteoro>();
+		explosao = new ArrayList<Meteoro>();
 		
 		for(int i = 0; i < coordenadas.length; i++){
 			if(i%3 == 0){
@@ -154,6 +157,14 @@ public class Fase extends JPanel implements ActionListener{
 				m.deslocar();
 			}
 			else{
+				if(m.getTamanho() == 3){
+					meteoros.add(new MeteoroMedio(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), m.posicao.getDy()));
+					meteoros.add(new MeteoroMedio(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), -m.posicao.getDy()));
+				}
+				if(m.getTamanho() == 2){
+					meteoros.add(new MeteoroPequeno(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), m.posicao.getDy()));
+					meteoros.add(new MeteoroPequeno(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), -m.posicao.getDy()));
+				}
 				meteoros.remove(i);
 			}
 			
@@ -201,7 +212,7 @@ public class Fase extends JPanel implements ActionListener{
 				
 				if(formaMissel.intersects(formaMeteoro)){
 					
-					tempMeteoro.setDestruido(true);
+					tempMeteoro.setDestruido();
 					tempMeteoro.setVisivel(false);
 					tempMissel.setVisivel(false);
 					
@@ -217,9 +228,22 @@ public class Fase extends JPanel implements ActionListener{
 	private class TecladoAdapter extends KeyAdapter{
 		
 		public void keyPressed(KeyEvent e){
+			
+			if(e.getKeyCode() == KeyEvent.VK_ENTER){
+				gameOver = false;
+				nave = new Nave();
+				inicializaMeteoros();
+			}
+			
+			
 			nave.keyPressed(e);
 		}
 		
+		public void keyReleased(KeyEvent e){
+			
+			nave.keyReleased(e);
+			
+		}
 	}
 	
 	

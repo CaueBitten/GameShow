@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.text.Position;
 
 public class Nave extends ObjetoFisico {
 
-	public Canhao canhao;
 	private double rotacao;
+	private double inclinacao;
 	private List<Missel> misseis;
 	
 	
@@ -37,7 +38,28 @@ public class Nave extends ObjetoFisico {
 	
 	@Override
 	public void deslocar() {
-			
+		
+		posicao.setX(posicao.getX() + posicao.getDx()); 
+		posicao.setY(posicao.getY() + posicao.getDy());; 
+		
+		if(this.posicao.getX() < 1){
+			posicao.setX(1);
+		}
+		
+		if(this.posicao.getX() > (LIMITE_X - getLargura() - 5)){
+			posicao.setX(LIMITE_X - getLargura() - 5);
+		}
+		
+		if(this.posicao.getY() < 1){
+			posicao.setY(1);
+		}
+
+		if(this.posicao.getY() > LIMITE_Y - 2*getAltura()){
+			posicao.setY(LIMITE_Y - 2*getAltura());
+		}
+		
+		rotacao += inclinacao;
+		
 	}
 
 	public double getRotacao() {
@@ -48,16 +70,58 @@ public class Nave extends ObjetoFisico {
 		
 		int codigo = tecla.getKeyCode();
 		
+		if(codigo == KeyEvent.VK_UP){
+			posicao.setDy(-1);
+		}
+		
+		if(codigo == KeyEvent.VK_DOWN){
+			posicao.setDy(1);
+		}
+		
+		if(codigo == KeyEvent.VK_LEFT){
+			posicao.setDx(-1);
+		}
+		
+		if(codigo == KeyEvent.VK_RIGHT){
+			posicao.setDx(1);
+		}
+		
 		if(codigo == KeyEvent.VK_A){
-			this.rotacao -= 5;
+			inclinacao = -1;
 		}
 		
 		if(codigo == KeyEvent.VK_D){
-			this.rotacao += 5;
+			inclinacao = 1;
 		}
 		
 		if(codigo == KeyEvent.VK_SPACE){
 			atira();
+		}
+		
+	}
+
+	public void keyReleased(KeyEvent tecla) {
+	
+	int codigo = tecla.getKeyCode();
+		
+		if(codigo == KeyEvent.VK_UP){
+			posicao.setDy(0);
+		}
+ 
+		if(codigo == KeyEvent.VK_DOWN){
+			posicao.setDy(0);
+		}
+		
+		if(codigo == KeyEvent.VK_LEFT){
+			posicao.setDx(0);
+		}
+		
+		if(codigo == KeyEvent.VK_RIGHT){
+			posicao.setDx(0);
+		}
+		
+		if(codigo == KeyEvent.VK_A || codigo == KeyEvent.VK_D){
+			inclinacao = 0;
 		}
 		
 	}

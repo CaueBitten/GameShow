@@ -47,7 +47,6 @@ public abstract class ObjetoFisico {
 
 	public void setDestruido(boolean isDestruido) {
 		this.isDestruido = isDestruido;
-		setVisivel(!isDestruido);
 	}
 
 	public boolean isVisivel() {
