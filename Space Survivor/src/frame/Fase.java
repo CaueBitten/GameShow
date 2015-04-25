@@ -29,7 +29,6 @@ public class Fase extends JPanel implements ActionListener{
 	private Nave nave;
 	private List<Meteoro> meteoros;
 	private Timer timer;
-	private List<Meteoro> explosao;
 	private boolean gameOver;
 	private int[][] coordenadas = 
 		{ 	{360, 1200}, {360, -800}, {360, 1500}, {360, -2600}, {360, -2200}, {360, 3000}, {360, 3350},
@@ -66,7 +65,6 @@ public class Fase extends JPanel implements ActionListener{
 	public void inicializaMeteoros(){
 		
 		meteoros = new ArrayList<Meteoro>();
-		explosao = new ArrayList<Meteoro>();
 		
 		for(int i = 0; i < coordenadas.length; i++){
 			if(i%3 == 0){
@@ -107,6 +105,7 @@ public class Fase extends JPanel implements ActionListener{
 				
 			}
 			
+			System.out.println("NUMERO DE METEOROS: " + meteoros.size());
 			for(int i = 0; i < meteoros.size(); i++){
 
 				Meteoro m = (Meteoro) meteoros.get(i);
@@ -153,26 +152,18 @@ public class Fase extends JPanel implements ActionListener{
 			
 			Meteoro m = (Meteoro) meteoros.get(i);
 			
-			if(m.isVisivel()){
+			if(!m.isDestruido()){
 				m.deslocar();
 			}
 			else{
-				if(m.getTamanho() == 3){
-					meteoros.add(new MeteoroMedio(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), m.posicao.getDy()));
-					meteoros.add(new MeteoroMedio(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), -m.posicao.getDy()));
-				}
-				if(m.getTamanho() == 2){
-					meteoros.add(new MeteoroPequeno(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), m.posicao.getDy()));
-					meteoros.add(new MeteoroPequeno(m.posicao.getX(), m.posicao.getY(), m.posicao.getDx(), -m.posicao.getDy()));
-				}
 				meteoros.remove(i);
 			}
 			
 		}
 		
 		nave.deslocar();
-		checarColisoes();
 		repaint();
+		checarColisoes();
 	}
 
 	public void checarColisoes(){
@@ -211,17 +202,39 @@ public class Fase extends JPanel implements ActionListener{
 				formaMeteoro = tempMeteoro.getBounds();
 				
 				if(formaMissel.intersects(formaMeteoro)){
-					
+					System.out.println("ACERTOU! PIU! PIU! UHU!");
+					System.out.println("LISTA DE METEOROS ANTES:" + meteoros.size());
+					tempMeteoro.divide(meteoros);
 					tempMeteoro.setDestruido();
-					tempMeteoro.setVisivel(false);
+					System.out.println("LISTA DE METEOROS DEPOIS:" + meteoros.size());
 					tempMissel.setVisivel(false);
+					
+//					if(tempMeteoro.getTamanho() == 3){
+//						System.out.println("CRIOU OS METEOROS");
+//						meteoros.add(new MeteoroMedio(tempMeteoro.posicao.getX() + tempMeteoro.getLargura(), tempMeteoro.posicao.getY() + tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), tempMeteoro.posicao.getDy()));
+//						meteoros.add(new MeteoroMedio(tempMeteoro.posicao.getX() - tempMeteoro.getLargura(), tempMeteoro.posicao.getY() - tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), - tempMeteoro.posicao.getDy()));
+//					}
+//					if(tempMeteoro.getTamanho() == 2){
+//						meteoros.add(new MeteoroPequeno(tempMeteoro.posicao.getX() + tempMeteoro.getLargura(), tempMeteoro.posicao.getY() + tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), tempMeteoro.posicao.getDy()));
+//						meteoros.add(new MeteoroPequeno(tempMeteoro.posicao.getX() - tempMeteoro.getLargura(), tempMeteoro.posicao.getY() - tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), - tempMeteoro.posicao.getDy()));
+//					}
+					
 					
 				}
 				
 			}
 			
-			
 		}
+		
+//		for(int i = 0; i < meteoros.size(); i++){
+//			Meteoro m = (Meteoro) meteoros.get(i);
+//			if(m.posicao.getX() < -10 || m.posicao.getX() > 1010){
+//				meteoros.remove(i);
+//			}
+//			if(m.posicao.getY() < -10 || m.posicao.getY() > 730){
+//				meteoros.remove(i);
+//			}
+//		}
 		
 	}
 	
@@ -229,7 +242,7 @@ public class Fase extends JPanel implements ActionListener{
 		
 		public void keyPressed(KeyEvent e){
 			
-			if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			if(e.getKeyCode() == KeyEvent.VK_ENTER && gameOver == true){
 				gameOver = false;
 				nave = new Nave();
 				inicializaMeteoros();

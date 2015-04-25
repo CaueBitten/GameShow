@@ -1,5 +1,7 @@
 package entidades;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 public class MeteoroMedio extends Meteoro {
@@ -18,7 +20,7 @@ public class MeteoroMedio extends Meteoro {
 	
 	}
 	
-public MeteoroMedio(int x, int y, int dx, int dy){
+	public MeteoroMedio(int x, int y, int dx, int dy){
 		
 		super(x, y, dx, dy);
 	
@@ -41,8 +43,16 @@ public MeteoroMedio(int x, int y, int dx, int dy){
 		
 	}
 	
-	public void divide(){
-		tamanho--;
+	
+	public void divide(List<Meteoro> meteoros)
+	{
+		meteoros.add(new MeteoroMedio(posicao.getX(), posicao.getY()));
+		meteoros.add(new MeteoroMedio(posicao.getX(), posicao.getY()));
+	}
+
+	@Override
+	public int getTamanho() {
+		return tamanho;
 	}
 	
 }

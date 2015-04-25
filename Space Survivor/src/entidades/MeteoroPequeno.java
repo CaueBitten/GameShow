@@ -1,5 +1,7 @@
 package entidades;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 
 public class MeteoroPequeno extends Meteoro {
@@ -35,14 +37,21 @@ public MeteoroPequeno(int x, int y, int dx, int dy){
 	public void explode(){
 		ImageIcon referencia = new ImageIcon("res\\explosao_2.gif");
 		setImagem(referencia.getImage());
+	
 		setAltura(0);
 		setLargura(0);
 		
 	}
 	
-	public void divide()
+	public void divide(List<Meteoro> meteoros)
 	{
-		tamanho = 1;
+		
 	}
+
+	@Override
+	public int getTamanho() {
+		return tamanho;
+	}
+	
 	
 }

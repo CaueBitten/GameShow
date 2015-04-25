@@ -1,5 +1,7 @@
 package entidades;
 
+import java.util.List;
+
 public abstract class Meteoro extends ObjetoFisico{
 
 	protected int tamanho;
@@ -38,6 +40,7 @@ public abstract class Meteoro extends ObjetoFisico{
 		
 		this.posicao.setDx(VELOCIDADE*dx);
 		this.posicao.setDy(VELOCIDADE*dy);
+		
 		setDestruido(false);
 		setVisivel(true);
 	}
@@ -50,11 +53,25 @@ public Meteoro(int x, int y, int dx, int dy){
 		
 		this.posicao.setDx(VELOCIDADE*dx);
 		this.posicao.setDy(VELOCIDADE*dy);
+		
 		setDestruido(false);
 		setVisivel(true);
 	}
 	
 	public void deslocar(){
+		
+		if(posicao.getX() < 0){
+			posicao.setX(LIMITE_X);
+		}
+		else if(posicao.getX() > LIMITE_X){
+			posicao.setX(0);
+		}
+		if(posicao.getY() < 0){
+			posicao.setY(LIMITE_Y);
+		}
+		else if(posicao.getX() > LIMITE_Y){
+			posicao.setY(0);
+		}
 		
 		this.posicao.setX(this.posicao.getX() + (int)(VELOCIDADE*this.posicao.getDx()));
 		this.posicao.setY(this.posicao.getY() + (int)(VELOCIDADE*this.posicao.getDy()));	
@@ -64,16 +81,14 @@ public Meteoro(int x, int y, int dx, int dy){
 	
 	public abstract void explode();
 	
-	public abstract void divide();
+	public abstract void divide(List<Meteoro> meteoros);
 	
 	public void setDestruido(){
 		explode();
 		setDestruido(true);
 	}
 	
-	public int getTamanho(){
-		return tamanho;
-	}
+	public abstract int getTamanho();
 	
 	
 }
