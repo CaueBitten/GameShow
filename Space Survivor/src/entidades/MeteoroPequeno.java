@@ -20,7 +20,7 @@ public class MeteoroPequeno extends Meteoro {
 	
 	}
 	
-public MeteoroPequeno(int x, int y, int dx, int dy){
+	public MeteoroPequeno(int x, int y, int dx, int dy){
 		
 		super(x, y, dx, dy);
 		
@@ -38,13 +38,8 @@ public MeteoroPequeno(int x, int y, int dx, int dy){
 		ImageIcon referencia = new ImageIcon("res\\explosao_2.gif");
 		setImagem(referencia.getImage());
 	
-		setAltura(0);
-		setLargura(0);
-		
-	}
-	
-	public void divide(List<Meteoro> meteoros)
-	{
+//		setAltura(0);
+//		setLargura(0);
 		
 	}
 

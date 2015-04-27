@@ -10,7 +10,7 @@ public class MeteoroMedio extends Meteoro {
 		
 		super(x, y);
 	
-		ImageIcon referencia = new ImageIcon("res\\asterioide_medio.png");
+		ImageIcon referencia = new ImageIcon("res\\asteroide_medio.png");
 		setImagem(referencia.getImage());
 		
 		setAltura(getImagem().getHeight(null));
@@ -24,7 +24,7 @@ public class MeteoroMedio extends Meteoro {
 		
 		super(x, y, dx, dy);
 	
-		ImageIcon referencia = new ImageIcon("res\\asterioide_medio.png");
+		ImageIcon referencia = new ImageIcon("res\\asteroide_medio.png");
 		setImagem(referencia.getImage());
 		
 		setAltura(getImagem().getHeight(null));
@@ -38,16 +38,9 @@ public class MeteoroMedio extends Meteoro {
 		ImageIcon referencia = new ImageIcon("res\\explosao_2.gif");
 		setImagem(referencia.getImage());
 		
-		setAltura(0);
-		setLargura(0);
+//		setAltura(0);
+//		setLargura(0);
 		
-	}
-	
-	
-	public void divide(List<Meteoro> meteoros)
-	{
-		meteoros.add(new MeteoroMedio(posicao.getX(), posicao.getY()));
-		meteoros.add(new MeteoroMedio(posicao.getX(), posicao.getY()));
 	}
 
 	@Override

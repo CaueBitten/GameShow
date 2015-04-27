@@ -14,7 +14,7 @@ public class Nave extends ObjetoFisico {
 	
 	
 	public Nave(){
-		ImageIcon referencia = new ImageIcon("res\\nave.gif");
+		ImageIcon referencia = new ImageIcon("res\\nave.png");
 		
 		setImagem(referencia.getImage());
 		setAltura(getImagem().getHeight(null));

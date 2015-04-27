@@ -1,6 +1,7 @@
 package frame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -26,15 +27,14 @@ import entidades.Nave;
 public class Fase extends JPanel implements ActionListener{
 
 	private Image fundo;
+	private int pontuacao;
 	private Nave nave;
 	private List<Meteoro> meteoros;
 	private Timer timer;
 	private boolean gameOver;
 	private int[][] coordenadas = 
-		{ 	{360, 1200}, {360, -800}, {360, 1500}, {360, -2600}, {360, -2200}, {360, 3000}, {360, 3350},
-			{1350, 360}, {1900, 360}, {1700, 360}, {-2400, 360}, {-2800, 360}, {3200, 360}, {-3500, 360},
-			{2380, 1000}, {1279, 4353}, {1022, 3247}, {3648, 1332}, {1321, 3123}, {2131, 1324}, {1323, 1323},
-			{-2121, -3300}, {-2131, 3212}, {1002, -1292}, {1002, -2234}, {-1213, 2001}, {2001, -2001}
+		{ 	{500, 720}, {250, 0}, {750, 0}, {750, 0}, {1000, 720}, {0, 0},
+			{1350, 0}, {1900, 180}, {1700, 360}, {-2400, 360}, {-2800, 360}, {3200, 540}, {-3500, 720},
 //			{}, {}, {}, {}, {},
 //			{}, {}, {}, {}, {}
 		};
@@ -45,6 +45,8 @@ public class Fase extends JPanel implements ActionListener{
 		
 		gameOver = false;
 		
+		pontuacao = 0;
+		
 		setFocusable(true);
 		setDoubleBuffered(true);
 		addKeyListener(new TecladoAdapter());
@@ -54,7 +56,7 @@ public class Fase extends JPanel implements ActionListener{
 		fundo = referencia.getImage();
 		
 		nave = new Nave();
-		
+
 		inicializaMeteoros();
 		
 		timer = new Timer(5, this);
@@ -80,6 +82,13 @@ public class Fase extends JPanel implements ActionListener{
 		
 	}
 	
+	public void removeMeteoros(){
+		
+		while(meteoros.size() != 0){
+			meteoros.remove(0);
+		}
+		
+	}
 	public void paint(Graphics g){
 		
 		Graphics2D graficos = (Graphics2D) g;
@@ -105,7 +114,6 @@ public class Fase extends JPanel implements ActionListener{
 				
 			}
 			
-			System.out.println("NUMERO DE METEOROS: " + meteoros.size());
 			for(int i = 0; i < meteoros.size(); i++){
 
 				Meteoro m = (Meteoro) meteoros.get(i);
@@ -114,6 +122,7 @@ public class Fase extends JPanel implements ActionListener{
 			}
 			
 			graficos.setColor(Color.WHITE);
+			g.drawString("Pontuacao : " + pontuacao, 10, 10);
 			
 		}
 		
@@ -122,10 +131,22 @@ public class Fase extends JPanel implements ActionListener{
 			ImageIcon fimJogo = new ImageIcon("res\\game_over.jpg");
 			
 			graficos.drawImage(fimJogo.getImage(), 0, 0, null);
+
+			//graficos.setFont(new Font("TimesRoman", Font.PLAIN, 32)); 
+			graficos.setColor(Color.WHITE);
+			g.drawString("Pontuacao : " + pontuacao, 450, 350);
+
+		}
+		if(meteoros.size() == 0){			
+			ImageIcon fimJogo = new ImageIcon("res\\deathstar2.gif");
+
+			graficos.drawImage(fimJogo.getImage(), 0, 0, null);
 			
+			//graficos.setFont(new Font("TimesRoman", Font.PLAIN, 32)); 
+			graficos.setColor(Color.WHITE);
+			g.drawString("Pontuacao : " + pontuacao, 450, 350);
 		}
 	
-		
 		g.dispose();
 	}
 	
@@ -157,13 +178,19 @@ public class Fase extends JPanel implements ActionListener{
 			}
 			else{
 				meteoros.remove(i);
+				if(m.getTamanho() == 3){
+					espalhaMeteoroGrande(m);
+				}
+				else if(m.getTamanho() == 2){
+					espalhaMeteoroMedio(m);
+				}
 			}
 			
 		}
 		
 		nave.deslocar();
-		repaint();
 		checarColisoes();
+		repaint();
 	}
 
 	public void checarColisoes(){
@@ -202,23 +229,12 @@ public class Fase extends JPanel implements ActionListener{
 				formaMeteoro = tempMeteoro.getBounds();
 				
 				if(formaMissel.intersects(formaMeteoro)){
-					System.out.println("ACERTOU! PIU! PIU! UHU!");
-					System.out.println("LISTA DE METEOROS ANTES:" + meteoros.size());
-					tempMeteoro.divide(meteoros);
 					tempMeteoro.setDestruido();
-					System.out.println("LISTA DE METEOROS DEPOIS:" + meteoros.size());
 					tempMissel.setVisivel(false);
 					
-//					if(tempMeteoro.getTamanho() == 3){
-//						System.out.println("CRIOU OS METEOROS");
-//						meteoros.add(new MeteoroMedio(tempMeteoro.posicao.getX() + tempMeteoro.getLargura(), tempMeteoro.posicao.getY() + tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), tempMeteoro.posicao.getDy()));
-//						meteoros.add(new MeteoroMedio(tempMeteoro.posicao.getX() - tempMeteoro.getLargura(), tempMeteoro.posicao.getY() - tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), - tempMeteoro.posicao.getDy()));
-//					}
-//					if(tempMeteoro.getTamanho() == 2){
-//						meteoros.add(new MeteoroPequeno(tempMeteoro.posicao.getX() + tempMeteoro.getLargura(), tempMeteoro.posicao.getY() + tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), tempMeteoro.posicao.getDy()));
-//						meteoros.add(new MeteoroPequeno(tempMeteoro.posicao.getX() - tempMeteoro.getLargura(), tempMeteoro.posicao.getY() - tempMeteoro.getAltura(), tempMeteoro.posicao.getDx(), - tempMeteoro.posicao.getDy()));
-//					}
-					
+					if(!gameOver){
+						pontuacao += 50*tempMeteoro.getTamanho();
+					}
 					
 				}
 				
@@ -226,25 +242,142 @@ public class Fase extends JPanel implements ActionListener{
 			
 		}
 		
-//		for(int i = 0; i < meteoros.size(); i++){
-//			Meteoro m = (Meteoro) meteoros.get(i);
-//			if(m.posicao.getX() < -10 || m.posicao.getX() > 1010){
-//				meteoros.remove(i);
-//			}
-//			if(m.posicao.getY() < -10 || m.posicao.getY() > 730){
-//				meteoros.remove(i);
-//			}
-//		}
+		for(int i = 0; i < meteoros.size(); i++){
+			Meteoro m = (Meteoro) meteoros.get(i);
+			if(m.posicao.getX() < 0 || m.posicao.getX() > 1000){
+				meteoros.remove(i);
+			}
+			if(m.posicao.getY() < 0 || m.posicao.getY() > 720){
+				meteoros.remove(i);
+			}
+		}
 		
 	}
 	
+	private void espalhaMeteoroGrande(Meteoro m) {
+		
+		int x = m.posicao.getX();
+		int y = m.posicao.getY();
+		int dx = m.posicao.getDx();
+		int dy = m.posicao.getDy();
+		
+		int dx1, dx2, dy1, dy2;
+		
+		if(dx == 0){
+			dx1 = -1;
+			dx2 = 1;
+			dy1 = dy;
+			dy2 = dy;
+		}
+		
+		else if(dy == 0){
+			dx1 = dx;
+			dx2 = dx;
+			dy1 = -1;
+			dy2 = 1;
+		}
+		
+		else if(dx > 0 && dy > 0){
+			dx1 = 1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = 1;
+		}
+		
+		else if(dx > 0 && dy < 0){
+			dx1 = 1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = -1;
+		}
+		
+		else if(dx < 0 && dy > 0){
+			dx1 = -1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = 1;
+		}
+		
+		else{
+			dx1 = -1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = -1;
+		}
+		
+		meteoros.add(new MeteoroMedio(x, y, dx1, dy1));
+		meteoros.add(new MeteoroMedio(x, y, dx2, dy2));
+
+	}
+
+	private void espalhaMeteoroMedio(Meteoro m) {
+  
+ 		int x = m.posicao.getX();
+		int y = m.posicao.getY();
+		int dx = m.posicao.getDx();
+		int dy = m.posicao.getDy();
+		
+		int dx1, dx2, dy1, dy2;
+		
+		if(dx == 0){
+			dx1 = -1;
+			dx2 = 1;
+			dy1 = dy;
+			dy2 = dy;
+		}
+		
+		else if(dy == 0){
+			dx1 = dx;
+			dx2 = dx;
+			dy1 = -1;
+			dy2 = 1;
+		}
+		
+		else if(dx > 0 && dy > 0){
+			dx1 = 1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = 1;
+		}
+		
+		else if(dx > 0 && dy < 0){
+			dx1 = 1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = -1;
+		}
+		
+		else if(dx < 0 && dy > 0){
+			dx1 = -1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = 1;
+		}
+		
+		else{
+			dx1 = -1;
+			dx2 = 0;
+			dy1 = 0;
+			dy2 = -1;
+		}
+		
+		meteoros.add(new MeteoroPequeno(x, y, dx1, dy1));
+		meteoros.add(new MeteoroPequeno(x, y, dx2, dy2));
+	}
+
 	private class TecladoAdapter extends KeyAdapter{
 		
 		public void keyPressed(KeyEvent e){
 			
-			if(e.getKeyCode() == KeyEvent.VK_ENTER && gameOver == true){
+			if(e.getKeyCode() == KeyEvent.VK_ENTER && (gameOver == true || meteoros.size() == 0)){
 				gameOver = false;
+				
+				if(meteoros.size() != 0){
+					pontuacao = 0;				
+				}
+				
 				nave = new Nave();
+				removeMeteoros();
 				inicializaMeteoros();
 			}
 			
